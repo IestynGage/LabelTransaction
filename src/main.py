@@ -1,6 +1,13 @@
+from cProfile import label
 import csv
+from fileinput import filename
+
+from labeler import Label, Labeler
+from transactions import Transaction
 
 class LabelTransaction:
+    def __init__(self) -> None:
+        self.transactions = Transaction()
 
     def mainMenu(self):
         menu = True
@@ -13,15 +20,18 @@ class LabelTransaction:
                     
                 case 1:
                     print("Outputting file")
+
                 case 2:
                     print("Quit")
                     menu = False
-                case default:
+
+                case _:
                     print("Did not recongise option")
 
     def stripAccount(self):
         print("Enter filename")
-        fileName = input()
+        # fileName = input()
+        fileName = "a"
         print("Please enter account type:")
         print("1. Current Account")
         print("2. Credit Account")
@@ -32,10 +42,10 @@ class LabelTransaction:
             self.stripCreditAccount(fileName)
 
     def stripCurrentAcount(self, fileName):
-        print("Strip Current Account")
+        self.readCSV("current.csv")
 
     def stripCreditAccount(self, fileName):
-        print("Strip Current Account")
+        self.readCSV("credit.csv")
 
     def labelList(self):
         print("Please create the food list")
@@ -43,11 +53,19 @@ class LabelTransaction:
     def exportList(self):
         print("Please create the food list")
 
-def readCSV(filename):
-    with open(filename, mode='r') as csv_file:
-        csv_reader = csv.DictReader(csv_file)
-        for row in csv_reader:
-            print("ls")
+    def readCSV(self, filename):
+        labeller = Labeler()
+        with open(filename, mode='r') as csv_file:
+            csv_reader = csv.DictReader(csv_file)
+            for row in csv_reader:
+                rowLabel = labeller.checkLabels(row["Description"])
+                if(labeller.checkLabels(row["Description"])==""):
+                    print(row)
+                    print("Please enter label")
+                    label = input()
+
+                self.transactions.addTransaction(row['date'], row["Description"], row["value"], rowLabel)
+            
 
 if __name__ == "__main__":
     labelTransaction = LabelTransaction()
