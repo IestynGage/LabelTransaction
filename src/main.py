@@ -1,8 +1,7 @@
-from cProfile import label
 import csv
-from fileinput import filename
+import sys
 
-from labeler import Label, Labeler
+from labeler import Labeler
 from transactions import Transactions
 
 class LabelTransaction:
@@ -27,6 +26,7 @@ class LabelTransaction:
                 case 3:
                     print("Quit")
                     menu = False
+                    sys.exit(0)
 
                 case _:
                     print("Did not recongise option")
