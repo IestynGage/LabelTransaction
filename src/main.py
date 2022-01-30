@@ -3,25 +3,28 @@ import csv
 from fileinput import filename
 
 from labeler import Label, Labeler
-from transactions import Transaction
+from transactions import Transactions
 
 class LabelTransaction:
     def __init__(self) -> None:
-        self.transactions = Transaction()
+        self.transactions = Transactions()
 
     def mainMenu(self):
         menu = True
         while(menu):
+            print("Please enter an option")
+            print("    1 - Input Account")
+            print("    2 - Export list")
+            print("    3 - Quit")
             option = int(input("Please enter an option"))
             match option:
-                case 0:
-                    print("Inputting file")
+                case 1:
                     self.stripAccount()
                     
-                case 1:
-                    print("Outputting file")
-
                 case 2:
+                    self.exportList()
+
+                case 3:
                     print("Quit")
                     menu = False
 
@@ -42,18 +45,16 @@ class LabelTransaction:
             self.stripCreditAccount(fileName)
 
     def stripCurrentAcount(self, fileName):
-        self.readCSV("current.csv")
+        self.readCSV("current.csv", 1)
 
     def stripCreditAccount(self, fileName):
-        self.readCSV("credit.csv")
-
-    def labelList(self):
-        print("Please create the food list")
+        self.readCSV("credit.csv", -1)
 
     def exportList(self):
-        print("Please create the food list")
+        print("Exporting list")
+        self.transactions.convertToExcel()
 
-    def readCSV(self, filename):
+    def readCSV(self, filename, valueType):
         labeller = Labeler()
         with open(filename, mode='r') as csv_file:
             csv_reader = csv.DictReader(csv_file)
@@ -62,9 +63,11 @@ class LabelTransaction:
                 if(labeller.checkLabels(row["Description"])==""):
                     print(row)
                     print("Please enter label")
-                    label = input()
+                    rowLabel = input()
 
-                self.transactions.addTransaction(row['date'], row["Description"], row["value"], rowLabel)
+                if(rowLabel!="" or row["Value"]!=''):
+                    value = float(row["Value"]) * valueType
+                    self.transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
             
 
 if __name__ == "__main__":
