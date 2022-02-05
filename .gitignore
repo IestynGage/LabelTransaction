@@ -1,4 +1,5 @@
 *.csv
 *.pyc
 *.xlsx
+*.json
 __pycache__
