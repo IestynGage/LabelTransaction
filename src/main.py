@@ -3,10 +3,15 @@ import sys
 
 from labeler import Labeler
 from transactions import Transactions
+from colorama import Fore, Style, init
+
+CREDIT_ACCOUNT = -1
+CURRENT_ACCOUNT = 1
 
 class LabelTransaction:
     def __init__(self) -> None:
         self.transactions = Transactions()
+        init()
 
     def mainMenu(self):
         menu = True
@@ -45,10 +50,10 @@ class LabelTransaction:
             self.stripCreditAccount(fileName)
 
     def stripCurrentAcount(self, fileName):
-        self.readCSV("current.csv", 1)
+        self.readCSV("current.csv", CURRENT_ACCOUNT)
 
     def stripCreditAccount(self, fileName):
-        self.readCSV("credit.csv", -1)
+        self.readCSV("credit.csv", CREDIT_ACCOUNT)
 
     def exportList(self):
         print("Exporting list")
@@ -60,14 +65,20 @@ class LabelTransaction:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
                 rowLabel = labeller.checkLabels(row["Description"])
-                if(labeller.checkLabels(row["Description"])==""):
-                    print(row)
-                    print("Please enter label")
-                    rowLabel = input()
-
                 if(rowLabel!="" or row["Value"]!=''):
                     value = float(row["Value"]) * valueType
-                    self.transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
+                    if(labeller.checkLabels(row["Description"])==""):
+                        print("=======================================================")
+                        print("Date: " + row["Date"])
+                        print("Desc: " + row["Description"])
+                        if(value < 0):
+                            print("Value: " + Fore.RED + row["Value"] + Style.RESET_ALL)
+                        elif(value > 0):
+                            print("Value: " + Fore.GREEN + row["Value"] + Style.RESET_ALL)
+                        print("Please enter label")
+                        rowLabel = input()
+                    else:
+                        self.transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
             
 
 if __name__ == "__main__":
