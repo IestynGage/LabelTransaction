@@ -8,9 +8,18 @@ from colorama import Fore, Style, init
 CREDIT_ACCOUNT = -1
 CURRENT_ACCOUNT = 1
 
+CURSOR_UP_ONE = '\x1b[1A' 
+ERASE_LINE = '\x1b[2K' 
+
+def deleteLastLine(n=1): 
+    for _ in range(n): 
+        sys.stdout.write(CURSOR_UP_ONE) 
+        sys.stdout.write(ERASE_LINE) 
+
 class LabelTransaction:
     def __init__(self) -> None:
         self.transactions = Transactions()
+        self.labeler = Labeler('labels.json')
         init()
 
     def mainMenu(self):
@@ -23,6 +32,7 @@ class LabelTransaction:
             option = int(input("Please enter an option"))
             match option:
                 case 1:
+                    deleteLastLine(5)
                     self.stripAccount()
                     
                 case 2:
@@ -37,30 +47,36 @@ class LabelTransaction:
                     print("Did not recongise option")
 
     def stripAccount(self):
+        print("Importing account")
         print("Enter filename")
-        # fileName = input()
-        fileName = "a"
+        fileName = input()
+        deleteLastLine(3)
+        print("Importing: " + fileName)
         print("Please enter account type:")
         print("1. Current Account")
         print("2. Credit Account")
         accountType = int(input())
+        deleteLastLine(4)
         if(accountType == 1):
             self.stripCurrentAcount(fileName)
         elif (accountType == 2):
             self.stripCreditAccount(fileName)
+        deleteLastLine(1)
+        print("Imported: " + fileName)
 
     def stripCurrentAcount(self, fileName):
-        self.readCSV("current.csv", CURRENT_ACCOUNT)
+        self.readCSV(fileName + ".csv", CURRENT_ACCOUNT)
 
     def stripCreditAccount(self, fileName):
-        self.readCSV("credit.csv", CREDIT_ACCOUNT)
+        self.readCSV(fileName + ".csv", CREDIT_ACCOUNT)
 
     def exportList(self):
         print("Exporting list")
         self.transactions.convertToExcel()
 
     def readCSV(self, filename, valueType):
-        labeller = Labeler()
+        labeller = self.labeler
+
         with open(filename, mode='r') as csv_file:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
@@ -73,12 +89,13 @@ class LabelTransaction:
                         print("Desc: " + row["Description"])
                         if(value < 0):
                             print("Value: " + Fore.RED + row["Value"] + Style.RESET_ALL)
-                        elif(value > 0):
+                        else:
                             print("Value: " + Fore.GREEN + row["Value"] + Style.RESET_ALL)
                         print("Please enter label")
                         rowLabel = input()
-                    else:
-                        self.transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
+                        deleteLastLine(6)
+                    
+                    self.transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
             
 
 if __name__ == "__main__":

@@ -1,0 +1,10 @@
+[
+    {
+        "label": "Shopping",
+        "matches": ["sainsburys", "morrisons", "co-op", "deliveroo", "aldi", "tesco", "domino"]
+    },
+    {
+        "label": "Transport",
+        "matches": ["uber","train", "bus", "transport for wales", "tfl"]
+    }
+]
