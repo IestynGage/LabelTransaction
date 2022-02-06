@@ -12,10 +12,18 @@ class Labeler:
                     matches.append(match)
                 self.labels.append(Label(label["label"], matches))
 
+
     def addLabel(self, label):
         self.labels.append(label)
 
-    def checkLabels(self, input:str):
+    def isValidLabel(self, input:str):
+        for label in self.labels:
+            if(input==label.label):
+                return True
+        
+        return False
+
+    def matchesLabel(self, input:str):
         for label in self.labels:
             if(label.matchLabel(input)):
                 return label.label
