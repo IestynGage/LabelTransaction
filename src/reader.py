@@ -9,14 +9,6 @@ from colorama import Fore, Style, init
 CURSOR_UP_ONE = '\x1b[1A' 
 ERASE_LINE = '\x1b[2K' 
 
-class VolcabCompleter:
-    def __init__(self,volcab):
-        self.volcab = volcab
-
-    def complete(self,text,state):
-        results =  [x for x in self.volcab if x.startswith(text)] + [None]
-        return results[state]
-
 def deleteLastLine(n=1): 
     for _ in range(n): 
         sys.stdout.write(CURSOR_UP_ONE) 
@@ -25,8 +17,6 @@ def deleteLastLine(n=1):
 class Reader:
     def __init__(self) -> None:
         words = ['dog','cat','rabbit','bird','slug','snail']
-        completer = VolcabCompleter(words)
-        readline.set_completer(completer.complete)
         init()
 
     def readCSV(self, filename:str, labeller:Labeler, accountType:int):
@@ -57,7 +47,7 @@ class Reader:
         print("Please enter label")
         validLabel = False
         while (validLabel == False):
-            rowLabel = raw_input("jyguyguyg")  
+            rowLabel =  input()
             if (labeller.isValidLabel(rowLabel)==False and rowLabel!=""):
                 deleteLastLine(2)
                 print(rowLabel + " isn't a valid label, please enter a label:")
