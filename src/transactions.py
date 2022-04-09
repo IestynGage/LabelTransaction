@@ -9,7 +9,7 @@ class Transactions:
         self.labels.append(Transaction(date, desc, value, label))
 
     def addTransactions(self, transactions):
-        self.labels.append(transactions)
+        self.labels = self.labels + transactions.labels
 
     def convertToExcel(self):
         ws = self.wb.active

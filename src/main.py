@@ -1,4 +1,5 @@
 import sys
+import os
 
 from labeler import Labeler
 from reader import Reader
@@ -21,33 +22,34 @@ class LabelTransaction:
         self.transactions = Transactions()
         self.reader = Reader()
         self.labeler = Labeler('labels.json')
+        self.computedFiles = []
         init()
 
-    def mainMenu(self):
-        menu = True
-        while(menu):
-            print("Please enter an option")
-            print("    1 - Input Account")
-            print("    2 - Export list")
-            option = int(input("Please enter an option"))
-            deleteLastLine(4)
-            match option:
-                case 1:
-                    self.stripAccount()
-                    
-                case 2:
-                    self.exportList()
-                    sys.exit(0)
+    def mainList(self):
+        moreFiles = True
+        while(moreFiles):
+            print("Looking for csv files...")
+            files = [f for f in os.listdir('.') if os.path.isfile(f)]
+            totalFiles = 0
+            for f in files:
+                if(f.endswith(".csv")):
+                    totalFiles = totalFiles + 1
+                    if(f in self.computedFiles):
+                        print("(" + Fore.GREEN + Style.BRIGHT + "X" +Style.RESET_ALL+ ") " + f)
+                    else:
+                        print(f)
+            print("What file would you like to add next? (Enter nothing to export)")
+            nextfile = input()
+            deleteLastLine(3 + totalFiles)
+            if(nextfile!=""):
+                self.stripAccount(nextfile)
+                self.computedFiles.append(nextfile+".csv")
+            else:
+                moreFiles = False
+                self.exportList()
 
-                case _:
-                    print("Did not recongise option")
-
-    def stripAccount(self):
-        print("Importing account")
-        print("Enter filename")
-        fileName = input()
-        deleteLastLine(3)
-        print("Importing: " + fileName)
+    def stripAccount(self, fileName):
+        print("Importing: " + Style.BRIGHT + fileName + Style.RESET_ALL)
         print("Please enter account type:")
         print("1. Current Account")
         print("2. Credit Account")
@@ -75,4 +77,4 @@ class LabelTransaction:
 
 if __name__ == "__main__":
     labelTransaction = LabelTransaction()
-    labelTransaction.mainMenu()
+    labelTransaction.mainList()
