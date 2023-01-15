@@ -9,13 +9,13 @@ from colorama import Fore, Style, init
 CREDIT_ACCOUNT = -1
 CURRENT_ACCOUNT = 1
 
-CURSOR_UP_ONE = '\x1b[1A' 
-ERASE_LINE = '\x1b[2K' 
+CURSOR_UP_ONE = '\x1b[1A'
+ERASE_LINE = '\x1b[2K'
 
-def deleteLastLine(n=1): 
-    for _ in range(n): 
-        sys.stdout.write(CURSOR_UP_ONE) 
-        sys.stdout.write(ERASE_LINE) 
+def deleteLastLine(n=1):
+    for _ in range(n):
+        sys.stdout.write(CURSOR_UP_ONE)
+        sys.stdout.write(ERASE_LINE)
 
 class LabelTransaction:
     def __init__(self) -> None:
@@ -35,7 +35,7 @@ class LabelTransaction:
                 if(f.endswith(".csv")):
                     totalFiles = totalFiles + 1
                     if(f in self.computedFiles):
-                        print("(" + Fore.GREEN + Style.BRIGHT + "X" +Style.RESET_ALL+ ") " + f)
+                        print("(" + Fore.GREEN + Style.BRIGHT + "X" + Style.RESET_ALL + ") " + f)
                     else:
                         print(f)
             print("What file would you like to add next? (Enter nothing to export)")

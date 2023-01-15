@@ -1,5 +1,5 @@
 *.csv
 *.pyc
-*.xlsx
+spending.xlsx
 *.json
 __pycache__

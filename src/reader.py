@@ -3,7 +3,7 @@ import sys
 import readline
 
 from labeler import Labeler
-from transactions import Transactions
+from transactions import Transactions, INCOME, EXPENSE
 from colorama import Fore, Style, init
 
 CURSOR_UP_ONE = '\x1b[1A' 
@@ -31,8 +31,9 @@ class Reader:
                     
                     if(labeller.matchesLabel(row["Description"])==""):
                         rowLabel = self.manualLabel(row["Date"], row["Description"], value, labeller)
-                    
-                    transactions.addTransaction(row['Date'], row["Description"], value, rowLabel)
+                    transactionType = INCOME if value > 0 else EXPENSE
+
+                    transactions.addTransaction(row['Date'], row["Description"], value, rowLabel, transactionType)
 
         return transactions
     
