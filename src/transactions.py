@@ -2,7 +2,7 @@ from openpyxl import load_workbook
 
 INCOME = 'I'
 EXPENSE = 'E'
-TEMPLATE_FILE_PATH = 'template.xlsx'
+TEMPLATE_FILE_PATH = 'resources/template.xlsx'
 
 EXPENSE_COLUMN = 4
 INCOME_COLUMN = 12
