@@ -1,5 +1,6 @@
 import json
 
+
 class Labeler:
     def __init__(self, jsonFile):
         self.labels = []
@@ -12,33 +13,32 @@ class Labeler:
                     matches.append(match)
                 self.labels.append(Label(label["label"], matches))
 
-
     def addLabel(self, label):
         self.labels.append(label)
 
-    def isValidLabel(self, input:str):
+    def isValidLabel(self, input: str):
         for label in self.labels:
-            if(input==label.label):
+            if input == label.label:
                 return True
-        
+
         return False
 
-    def matchesLabel(self, input:str):
+    def matchesLabel(self, input: str):
         for label in self.labels:
-            if(label.matchLabel(input)):
+            if label.matchLabel(input):
                 return label.label
 
-        return ''
+        return ""
 
 
 class Label:
-    def __init__(self, label:str, matches):
+    def __init__(self, label: str, matches):
         self.label = label
         self.matches = matches
-    
+
     def matchLabel(self, input) -> bool:
         for match in self.matches:
-            if(match in input.lower()):
+            if match in input.lower():
                 return True
 
         return False
