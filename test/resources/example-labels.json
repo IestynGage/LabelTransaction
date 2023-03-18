@@ -1,0 +1,10 @@
+[
+  {
+      "label":"housing",
+      "matches": ["rent"]
+  },
+  {
+      "label": "utility",
+      "matches": ["phone"]
+  }
+]
