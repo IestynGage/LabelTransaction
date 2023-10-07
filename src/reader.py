@@ -18,7 +18,6 @@ def deleteLastLine(n=1):
 
 class Reader:
     def __init__(self) -> None:
-        words = ["dog", "cat", "rabbit", "bird", "slug", "snail"]
         init()
 
     def readCSV(self, filename: str, labeller: Labeler, accountType: int):

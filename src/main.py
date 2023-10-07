@@ -5,6 +5,7 @@ from labeler import Labeler
 from reader import Reader
 from transactions import Transactions
 from colorama import Fore, Style, init
+import subprocess
 
 CREDIT_ACCOUNT = -1
 CURRENT_ACCOUNT = 1
@@ -18,6 +19,12 @@ def deleteLastLine(n=1):
         sys.stdout.write(CURSOR_UP_ONE)
         sys.stdout.write(ERASE_LINE)
 
+def openDirectory():
+    directory = os.getcwd()
+    if sys.platform == "darwin":
+        subprocess.call(["open", directory])
+    else:
+        subprocess.Popen(r'explorer /select,"C:\path\of\folder\file"')
 
 class LabelTransaction:
     def __init__(self) -> None:
@@ -57,6 +64,7 @@ class LabelTransaction:
             else:
                 moreFiles = False
                 self.exportList()
+                openDirectory()
 
     def stripAccount(self, fileName):
         print("Importing: " + Style.BRIGHT + fileName + Style.RESET_ALL)
