@@ -36,3 +36,5 @@ Date,Description,Value
 
 * Filter out date
 * Add tests
+* Clean up data
+* Automatically add things to labels at run time.
