@@ -5,6 +5,7 @@ import readline
 from labeler import Labeler
 from transactions import Transactions, INCOME, EXPENSE
 from colorama import Fore, Style, init
+from datetime import datetime
 
 CURSOR_UP_ONE = "\x1b[1A"
 ERASE_LINE = "\x1b[2K"
@@ -20,14 +21,18 @@ class Reader:
     def __init__(self) -> None:
         init()
 
-    def readCSV(self, filename: str, labeller: Labeler, accountType: int):
+    def readCSV(self, filename: str, labeller: Labeler, filterMonth: str, accountType: int):
         transactions = Transactions()
+        filter_month_year = filterMonth + " " + str(datetime.now().year)
+
         with open(filename, mode="r") as csv_file:
             csv_reader = csv.DictReader(csv_file)
             for row in csv_reader:
                 rowLabel = labeller.matchesLabel(row["Description"])
 
-                if rowLabel != "" or row["Value"] != "":
+                if not filter_month_year in row['Date']:
+                    print("Skipping date: " + row["Date"])
+                elif (rowLabel != "" or row["Value"] != ""):
                     value = float(row["Value"]) * accountType
 
                     if labeller.matchesLabel(row["Description"]) == "":

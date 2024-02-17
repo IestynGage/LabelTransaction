@@ -23,8 +23,8 @@ def openDirectory():
     directory = os.getcwd()
     if sys.platform == "darwin":
         subprocess.call(["open", directory])
-    else:
-        subprocess.Popen(r'explorer /select,"C:\path\of\folder\file"')
+    # else:
+    #     subprocess.Popen(r'explorer /select,"C:\path\of\folder\file"')
 
 class LabelTransaction:
     def __init__(self) -> None:
@@ -36,6 +36,8 @@ class LabelTransaction:
 
     def mainList(self):
         moreFiles = True
+        self.getFilterMonth()
+
         while moreFiles:
             print("Looking for csv files...")
             files = [f for f in os.listdir(".") if os.path.isfile(f)]
@@ -77,24 +79,29 @@ class LabelTransaction:
             self.stripCurrentAcount(fileName)
         elif accountType == 2:
             self.stripCreditAccount(fileName)
-        deleteLastLine(1)
-        print("Imported: " + fileName)
+        # deleteLastLine(1)
+        print("Imported: " + Style.BRIGHT + fileName + Style.RESET_ALL)
 
     def stripCurrentAcount(self, fileName):
         transactions = self.reader.readCSV(
-            fileName + ".csv", self.labeler, CURRENT_ACCOUNT
+            fileName + ".csv", self.labeler, self.filterMonth, CURRENT_ACCOUNT
         )
         self.transactions.addTransactions(transactions)
 
     def stripCreditAccount(self, fileName):
         transactions = self.reader.readCSV(
-            fileName + ".csv", self.labeler, CREDIT_ACCOUNT
+            fileName + ".csv", self.labeler, self.filterMonth, CREDIT_ACCOUNT
         )
         self.transactions.addTransactions(transactions)
 
     def exportList(self):
         print("Exporting list")
         self.transactions.convertToExcel()
+
+    def getFilterMonth(self):
+        print("Which month do you want to filter?")
+        self.filterMonth = input()
+        deleteLastLine(2)
 
 
 if __name__ == "__main__":
