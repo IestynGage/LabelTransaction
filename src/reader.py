@@ -23,7 +23,7 @@ class Reader:
 
     def readCSV(self, filename: str, labeller: Labeler, filterMonth: str, accountType: int):
         transactions = Transactions()
-        filter_month_year = filterMonth + " " + str(datetime.now().year)
+        filter_month_year = filterMonth
 
         with open(filename, mode="r") as csv_file:
             csv_reader = csv.DictReader(csv_file)
