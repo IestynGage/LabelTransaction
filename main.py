@@ -1,18 +1,25 @@
-from parser import load_transactions
+from excel_connector import open_excel_file
+from exporter import export_transactions
+from parser import parse_csv_files
 
-# TUI to select CSVs and their type
-
-# Select Month
-
-# Parse transcations and 'rules'.
+from rules import Rules
+from tui.CSVCategorizer import CsvCategorizer
+from tui.ExtracMonth import MonthSelectorApp
 
 # TUIs to select remaining categories.
 
 # exporter
 
 def main():
-    list = load_transactions('./credit.csv', 'credit')
-    print(len(list))
+    # TODO Load current progress of excel. 
+    # Ask user continue loading excel thingy for month ... y/n
+    # Assuming the scenario you already ran this once this month
+    csv_files = CsvCategorizer().run()
+    month = MonthSelectorApp(csv_files).run()
+    transactions = parse_csv_files(csv_files)
+    labeled_transactions = Rules().apply(transactions)
+    export_transactions(labeled_transactions)
+    open_excel_file()
 
 if __name__ == "__main__":
     main()

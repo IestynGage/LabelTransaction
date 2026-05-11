@@ -8,16 +8,6 @@ from textual.widgets import Header, Footer, ListView, ListItem, Label
 from textual.containers import Container
 
 
-# -----------------------------
-# CONFIGURE YOUR CSV FILES HERE
-# -----------------------------
-CSV_FILES = [
-    "credit.csv",
-    "current.csv",
-    # add more here
-]
-
-
 def extract_months_from_csv(files: List[str]) -> List[str]:
     """Extract unique months in format 'Mon YYYY' from CSV files."""
     months: Set[str] = set()
@@ -42,9 +32,7 @@ def extract_months_from_csv(files: List[str]) -> List[str]:
                 except ValueError:
                     continue
 
-    print("hello")
-    print(months)
-    # Sort chronologically
+
     return sorted(
         months,
         key=lambda m: datetime.strptime(m, "%b %Y")
@@ -68,6 +56,11 @@ class MonthSelectorApp(App):
         """Called after widgets are mounted. Safe to add ListItems here."""
         list_view = self.query_one(ListView)
         months = extract_months_from_csv(self.files)
+        
+        if len(months) == 1:
+            self.exit(result=months[1])
+            return;
+
         for month in months:
             item = ListItem(Label(month))
             item.month = month  # store value here

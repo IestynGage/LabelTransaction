@@ -1,6 +1,16 @@
 from models import Transaction
 import pandas as pd
-from typing import List
+from typing import Dict, List
+
+def parse_csv_files(csv_files:Dict[str, str]) -> List[Transaction]:
+    """Parse a list of CSV files."""
+    all_transactions: List[Transaction] = []
+
+    for (file_name, file_type) in csv_files.items():
+        transactions = load_transactions(file_name, file_type)
+        all_transactions = all_transactions + transactions
+
+    return all_transactions
 
 def load_transactions(csv_path: str, account_type:str) -> List[Transaction]:
     # Read CSV
