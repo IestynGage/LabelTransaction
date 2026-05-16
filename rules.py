@@ -59,3 +59,27 @@ class Rules():
         break  # stop at first match
 
     return transaction
+  
+def filter_by_month(transactions: List[Transaction], month: str) -> List[Transaction]:
+  """
+  Filters a list of transactions by a 3-letter month string (e.g., 'jan', 'nov').
+  Assumes transaction.date is in the format 'DD MMM YYYY'.
+  """
+  # Normalize the input (e.g., "Jan " -> "jan")
+  target_month = month.lower()
+  
+  filtered_transactions = []
+  for t in transactions:
+    try:
+      # Split '24 Nov 2025' by spaces -> ['24', 'Nov', '2025']
+      # Index 1 is the month ('Nov')
+      # tx_month =  t.date.split()[0].lower()
+      
+      if target_month in t.date.lower():
+        filtered_transactions.append(t)
+    except IndexError:
+      # Skips any transactions with malformed or missing dates 
+      # to prevent the app from crashing
+      continue
+          
+  return filtered_transactions
