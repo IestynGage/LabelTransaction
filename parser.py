@@ -32,7 +32,7 @@ def parse_excel(file_path: str) -> list[Transaction]:
         txn = Transaction(
             date=str(row['Date']),
             desc=str(row['Description']),
-            value=int(row['Value']), 
+            value=float(row['Value']), 
             account_type="",      # Not in Excel headings, defaulting to empty
             label=str(row['Label']),
             transactionType=""    # Defaulting to empty per your instruction
