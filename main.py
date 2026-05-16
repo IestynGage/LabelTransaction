@@ -8,10 +8,6 @@ from tui.CSVCategorizer import CsvCategorizer
 from tui.ExtracMonth import MonthSelectorApp
 from tui.existing import continue_with_existing
 
-# TUIs to select remaining categories.
-
-# exporter
-
 def main():
     existing_transactions:list[Transaction] = parse_excel('transactions.xlsx')
 
@@ -21,11 +17,8 @@ def main():
     else:
         csv_files = CsvCategorizer().run()
         month = MonthSelectorApp(csv_files).run().split()[0]
-        print(month)
         csv_transactions = parse_csv_files(csv_files)
-        print(len(csv_transactions))
         transactions = filter_by_month(csv_transactions, month)
-        print(len(transactions))
     
     labeled_transactions = Rules().apply(transactions)
     export_transactions(labeled_transactions)
@@ -33,5 +26,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-# Continue with existing t 
