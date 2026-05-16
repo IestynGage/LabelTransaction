@@ -1,21 +1,30 @@
-from typing import List
+from typing import List, Dict, Any
 
 from models import Transaction
 import json
 from pathlib import Path
 import re
-from typing import Dict
 
 
-class Rules():
+class Rules:
 
   def __init__(self):
-    self.income_labels = self.load_labels("income_labels.json")
-    self.cost_labels = self.load_labels("cost_labels.json")
-    pass
+      self.income_labels = self.load_labels("income_labels.json")
+      self.cost_labels = self.load_labels("cost_labels.json")
 
-  def load_labels(self, labels_file_json: str) -> dict[str, str]:
-    """Loads the JSON file labels into a dictionary {regex: label}"""
+#  TODO
+  def load_labels(self, labels_file_json: str) -> List[Dict[str, Any]]:
+    """
+    Loads labels JSON.
+
+    Expected format:
+    [
+      {
+        "label": "Food",
+        "regex": ["walmart", "wholefood"]
+      }
+    ]
+    """
 
     path = Path(labels_file_json)
 
@@ -25,15 +34,11 @@ class Rules():
     with path.open("r", encoding="utf-8") as f:
         data = json.load(f)
 
-    # Convert list of dicts -> {regex: label}
-    return {
-        item["regex"]: item["label"]
-        for item in data
-    }
+    return data
   
   def apply(self, transactions: List[Transaction]):
     labeled_transactions = []
-    
+
     for transaction in transactions:
       if transaction.label != "":
         labeled_transactions.append(transaction)
@@ -44,19 +49,23 @@ class Rules():
       else:
         labeled_transactions.append(transaction)
 
-    return labeled_transactions;
+    return labeled_transactions
 
-  def apply_label(self, transaction, labels: Dict[str, str]):
+  def apply_label(self, transaction, labels: List[Dict[str, Any]]):
     """
-    Takes a transaction and dict {regex: label}
-    Returns the transaction with label applied if matched.
+    Applies the first matching label rule to a transaction.
     """
+
     description = transaction.desc.lower()
 
-    for pattern, label in labels.items():
-      if re.search(pattern, description):
-        transaction.label = label
-        break  # stop at first match
+    for rule in labels:
+      label = rule["label"]
+      patterns = rule["regex"]
+
+      for pattern in patterns:
+        if re.search(pattern, description):
+          transaction.label = label
+          return transaction
 
     return transaction
   
@@ -65,21 +74,17 @@ def filter_by_month(transactions: List[Transaction], month: str) -> List[Transac
   Filters a list of transactions by a 3-letter month string (e.g., 'jan', 'nov').
   Assumes transaction.date is in the format 'DD MMM YYYY'.
   """
-  # Normalize the input (e.g., "Jan " -> "jan")
+
   target_month = month.lower()
-  
+
   filtered_transactions = []
+
   for t in transactions:
     try:
-      # Split '24 Nov 2025' by spaces -> ['24', 'Nov', '2025']
-      # Index 1 is the month ('Nov')
-      # tx_month =  t.date.split()[0].lower()
-      
       if target_month in t.date.lower():
         filtered_transactions.append(t)
+
     except IndexError:
-      # Skips any transactions with malformed or missing dates 
-      # to prevent the app from crashing
       continue
-          
+
   return filtered_transactions
